@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>M&T Nails — Book Your Appointment</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --cream:      #FAF8F5;
+      --cream-dark: #EDE9E1;
+      --white:      #FFFFFF;
+      --black:      #111111;
+      --charcoal:   #2E2E2E;
+      --muted:      #888888;
+      --champagne:  #C9A96E;
+      --blush:      #E8C4B0;
+      --gold-grad:  linear-gradient(135deg,#BF975A 0%,#E2C68A 50%,#C4955A 100%);
+      --shadow-sm:  0 2px 10px rgba(0,0,0,0.055);
+      --shadow-md:  0 6px 22px rgba(0,0,0,0.09);
+      --shadow-lg:  0 14px 44px rgba(0,0,0,0.15);
+      --radius:     12px;
+      --radius-sm:  8px;
+      --ease:       cubic-bezier(0.4,0,0.2,1);
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      font-family:'DM Sans',sans-serif;
+      background:var(--cream);
+      color:var(--charcoal);
+      font-size:15px;
+      line-height:1.55;
+      -webkit-font-smoothing:antialiased;
+      overflow-x:hidden;
+    }
+    button{cursor:pointer;border:none;background:none;font-family:inherit}
+    .hide-scroll::-webkit-scrollbar{display:none}
+    .hide-scroll{-ms-overflow-style:none;scrollbar-width:none}
+
+    /* ── HEADER ── */
+    #hdr{
+      position:sticky;top:0;z-index:100;
+      background:var(--white);
+      border-bottom:1px solid var(--cream-dark);
+      box-shadow:var(--shadow-sm);
+    }
+    .hdr-inner{
+      max-width:600px;margin:0 auto;padding:0 20px;
+      height:66px;display:flex;align-items:center;justify-content:space-between;
+    }
+    .logo{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:500;color:var(--black);letter-spacing:.04em;line-height:1}
+    .logo small{display:block;font-size:10px;font-weight:400;letter-spacing:.2em;text-transform:uppercase;color:var(--champagne);margin-top:2px;font-family:'DM Sans',sans-serif}
+    .badge{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--muted);font-weight:300}
+    .dot{width:7px;height:7px;background:#5CB85C;border-radius:50%;animation:blink 2s infinite}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
+
+    /* ── HERO ── */
+    #hero{
+      background:var(--black);
+      padding:28px 20px 24px;
+      text-align:center;
+      position:relative;overflow:hidden;
+    }
+    #hero::before{
+      content:'';position:absolute;inset:0;
+      background:radial-gradient(ellipse at 70% 50%,rgba(201,169,110,.15) 0%,transparent 65%);
+      pointer-events:none;
+    }
+    .hero-eye{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--champagne);margin-bottom:8px}
+    .hero-h{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:300;color:#fff;line-height:1.2;margin-bottom:10px;letter-spacing:.01em}
+    .hero-h em{font-style:italic;color:var(--champagne)}
+    .hero-meta{display:flex;align-items:center;justify-content:center;gap:16px;font-size:11.5px;color:rgba(255,255,255,.4)}
+    .hero-meta span{display:flex;align-items:center;gap:5px}
+
+    /* ── LOCATION BAR ── */
+    #location-bar{
+      display:block;text-decoration:none;
+      background:var(--white);
+      border-bottom:1px solid var(--cream-dark);
+      transition:background .2s var(--ease);
+    }
+    #location-bar:hover{background:var(--cream)}
+    .loc-inner{
+      max-width:600px;margin:0 auto;padding:12px 20px;
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      color:var(--champagne);
+    }
+    .loc-left{display:flex;align-items:center;gap:10px;color:var(--champagne)}
+    .loc-text{display:flex;flex-direction:column;gap:1px}
+    .loc-name{font-size:13.5px;font-weight:500;color:var(--black)}
+    .loc-hint{font-size:11px;color:var(--muted);font-weight:300}
+    .loc-arrow{color:var(--muted);transition:color .2s,transform .2s}
+    #location-bar:hover .loc-arrow{color:var(--champagne);transform:translate(2px,-2px)}
+
+    /* ── CATEGORY PILLS ── */
+    #cats-wrap{
+      position:sticky;top:66px;z-index:90;
+      background:var(--white);
+      border-bottom:1px solid var(--cream-dark);
+      padding:0 20px;
+    }
+    #cats{
+      display:flex;gap:8px;overflow-x:auto;
+      padding:12px 0;
+      max-width:600px;margin:0 auto;
+    }
+    .cat-pill{
+      flex-shrink:0;padding:7px 16px;
+      border-radius:100px;
+      font-size:12.5px;font-weight:400;
+      color:var(--charcoal);
+      background:var(--cream);
+      border:1.5px solid var(--cream-dark);
+      transition:all .2s var(--ease);
+      white-space:nowrap;
+    }
+    .cat-pill.on,.cat-pill:hover{background:var(--black);color:#fff;border-color:var(--black)}
+    .cat-pill.on{box-shadow:0 4px 14px rgba(0,0,0,.18)}
+
+    /* ── MAIN ── */
+    #main{max-width:600px;margin:0 auto;padding:22px 16px 130px}
+
+    .svc-sec{margin-bottom:32px;animation:fadein .45s ease both}
+    .svc-sec:nth-child(1){animation-delay:.04s}
+    .svc-sec:nth-child(2){animation-delay:.1s}
+    .svc-sec:nth-child(3){animation-delay:.16s}
+    .svc-sec:nth-child(4){animation-delay:.22s}
+    .svc-sec:nth-child(5){animation-delay:.28s}
+    .svc-sec:nth-child(6){animation-delay:.34s}
+    @keyframes fadein{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+    .sec-head{display:flex;align-items:baseline;gap:10px;margin-bottom:13px;padding:0 4px}
+    .sec-title{font-family:'Cormorant Garamond',serif;font-size:21px;font-weight:500;color:var(--black);letter-spacing:.01em}
+    .sec-count{font-size:11px;color:var(--muted);font-weight:300}
+
+    /* ── SERVICE CARD ── */
+    .svc-card{
+      background:var(--white);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow-sm);
+      padding:15px;margin-bottom:9px;
+      display:flex;gap:13px;align-items:flex-start;
+      border:1.5px solid transparent;
+      transition:box-shadow .2s var(--ease),transform .2s var(--ease),border-color .2s var(--ease),background .2s var(--ease);
+    }
+    .svc-card:hover{box-shadow:var(--shadow-md);transform:translateY(-1px)}
+    .svc-card.in-cart{border-color:var(--champagne);background:#FFFCF7}
+    .card-body{flex:1;min-width:0}
+    .card-name{font-weight:500;font-size:14px;color:var(--black);margin-bottom:3px;line-height:1.3}
+    .addon-badge{
+      display:inline-block;font-size:9.5px;font-weight:400;
+      letter-spacing:.07em;color:var(--champagne);
+      vertical-align:middle;margin-left:6px;
+      background:rgba(201,169,110,.1);padding:1px 6px;border-radius:4px;
+    }
+    .card-desc{font-size:12.5px;color:var(--muted);font-weight:300;margin-bottom:9px;line-height:1.45}
+    .card-meta{display:flex;align-items:center;gap:9px}
+    .card-price{font-size:14px;font-weight:500;color:var(--black)}
+    .card-dot{color:var(--cream-dark)}
+    .card-dur{font-size:12px;color:var(--muted);font-weight:300;display:flex;align-items:center;gap:4px}
+    .card-actions{display:flex;flex-direction:column;align-items:center;justify-content:center}
+
+    /* ── ADD BUTTON ── */
+    .add-btn{
+      width:36px;height:36px;border-radius:50%;
+      display:flex;align-items:center;justify-content:center;
+      font-size:20px;line-height:1;
+      transition:all .2s var(--ease);
+      position:relative;flex-shrink:0;
+    }
+    .add-btn.off{background:var(--cream);color:var(--black);border:1.5px solid var(--cream-dark)}
+    .add-btn.off:hover{background:var(--champagne);color:#fff;border-color:var(--champagne)}
+    .add-btn.on{background:var(--black);color:#fff;border:1.5px solid var(--black)}
+
+    /* ── QTY CONTROL ── */
+    .qty{display:flex;align-items:center;gap:6px;background:var(--cream);border-radius:100px;padding:4px 10px;border:1.5px solid var(--cream-dark)}
+    .qty-btn{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--black);transition:background .15s}
+    .qty-btn:hover{background:var(--cream-dark)}
+    .qty-n{font-size:13px;font-weight:500;color:var(--black);min-width:14px;text-align:center}
+
+    .divider{height:1px;background:var(--cream-dark);margin:24px 4px}
+
+    /* ── CART BAR ── */
+    #cart-bar{
+      position:fixed;bottom:0;left:0;right:0;z-index:200;
+      padding:0 16px 20px;
+      pointer-events:none;opacity:0;transform:translateY(100%);
+      transition:opacity .3s ease,transform .35s cubic-bezier(.34,1.4,.64,1);
+    }
+    #cart-bar.on{pointer-events:all;opacity:1;transform:translateY(0)}
+    .cart-inner{
+      max-width:600px;margin:0 auto;
+      background:var(--black);border-radius:var(--radius);
+      padding:14px 16px;
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      box-shadow:var(--shadow-lg);
+    }
+    .cart-left{display:flex;flex-direction:column;gap:1px}
+    .cart-total{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:500;color:#fff;letter-spacing:.02em}
+    .cart-lbl{font-size:11px;color:rgba(255,255,255,.4);font-weight:300}
+    .continue{
+      background:var(--gold-grad);color:#fff;
+      font-size:13.5px;font-weight:500;letter-spacing:.04em;
+      padding:11px 22px;border-radius:100px;
+      display:flex;align-items:center;gap:8px;white-space:nowrap;
+      box-shadow:0 4px 16px rgba(201,169,110,.4);
+      transition:filter .2s,transform .2s;
+    }
+    .continue:hover{filter:brightness(1.1);transform:scale(1.02)}
+    .continue:active{transform:scale(.98)}
+
+    /* ── MODAL ── */
+    #overlay{
+      display:none;position:fixed;inset:0;z-index:500;
+      background:rgba(17,17,17,.6);backdrop-filter:blur(4px);
+      align-items:flex-end;justify-content:center;
+    }
+    #overlay.on{display:flex}
+    .modal{
+      width:100%;max-width:600px;
+      background:var(--white);border-radius:20px 20px 0 0;
+      padding:24px 20px 36px;
+      animation:slideup .32s cubic-bezier(.34,1.2,.64,1) forwards;
+      max-height:92vh;overflow-y:auto;
+    }
+    @keyframes slideup{from{transform:translateY(100%)}to{transform:translateY(0)}}
+    .modal-handle{width:40px;height:4px;background:var(--cream-dark);border-radius:100px;margin:0 auto 20px}
+    .modal-title{font-family:'Cormorant Garamond',serif;font-size:23px;font-weight:500;color:var(--black);margin-bottom:3px}
+    .modal-sub{font-size:12.5px;color:var(--muted);font-weight:300;margin-bottom:18px}
+    .modal-row{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:10px 0;border-bottom:1px solid var(--cream-dark);gap:12px;
+    }
+    .modal-row:last-of-type{border-bottom:none}
+    .modal-name{font-size:13.5px;color:var(--charcoal);flex:1}
+    .modal-qty{font-size:12px;color:var(--muted)}
+    .modal-price{font-size:13.5px;font-weight:500;color:var(--black)}
+    .modal-total-row{
+      display:flex;justify-content:space-between;align-items:center;
+      padding-top:14px;border-top:2px solid var(--black);margin:4px 0 20px;
+    }
+    .modal-total-label{font-size:13px;font-weight:500;letter-spacing:.05em;text-transform:uppercase}
+    .modal-total-val{font-family:'Cormorant Garamond',serif;font-size:25px;font-weight:600;color:var(--black)}
+
+    .field{margin-bottom:16px}
+    .flabel{display:block;font-size:11px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+    .finput,.fselect,.ftextarea{
+      width:100%;padding:12px 14px;
+      border:1.5px solid var(--cream-dark);border-radius:var(--radius-sm);
+      font-family:'DM Sans',sans-serif;font-size:14px;color:var(--black);
+      background:var(--cream);outline:none;appearance:none;
+      transition:border-color .2s,box-shadow .2s,background .2s;
+    }
+    .finput:focus,.fselect:focus,.ftextarea:focus{
+      border-color:var(--champagne);
+      box-shadow:0 0 0 3px rgba(201,169,110,.12);
+      background:var(--white);
+    }
+    .ftextarea{resize:vertical;min-height:70px}
+    .dt-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .confirm-btn{
+      width:100%;padding:15px;border-radius:100px;
+      background:var(--gold-grad);color:#fff;
+      font-size:15px;font-weight:500;letter-spacing:.04em;
+      box-shadow:0 6px 24px rgba(201,169,110,.32);
+      transition:filter .2s,transform .2s;
+      margin-bottom:10px;
+    }
+    .confirm-btn:hover{filter:brightness(1.09);transform:translateY(-1px)}
+    .cancel-btn{
+      width:100%;padding:13px;border-radius:100px;
+      color:var(--muted);font-size:13.5px;
+      border:1.5px solid var(--cream-dark);
+      transition:background .2s;
+    }
+    .cancel-btn:hover{background:var(--cream)}
+
+    /* ── TOAST ── */
+    #toast{
+      position:fixed;bottom:100px;left:50%;
+      transform:translateX(-50%) translateY(16px);
+      background:var(--black);color:#fff;
+      padding:11px 22px;border-radius:100px;
+      font-size:13px;z-index:600;
+      opacity:0;pointer-events:none;
+      transition:all .28s ease;white-space:nowrap;
+      box-shadow:var(--shadow-lg);
+    }
+    #toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+    .footer{text-align:center;padding:10px 20px 32px;font-size:11.5px;color:rgba(0,0,0,.28);font-weight:300;max-width:600px;margin:0 auto}
+
+    @media(min-width:600px){
+      .hero-h{font-size:34px}
+      #hero{padding:34px 20px 28px}
+    }
+  </style>
+
+</head>
+<body>
+
+<!-- HEADER -->
+
+<header id="hdr">
+  <div class="hdr-inner">
+    <div class="logo">
+      M&amp;T Nails
+      <small>Nail Studio &middot; Midrand</small>
+    </div>
+    <div class="badge">
+      <span class="dot"></span> Accepting Bookings
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+
+<section id="hero">
+  <p class="hero-eye">Book Online</p>
+  <h1 class="hero-h">Luxury Nails, <em>Crafted</em> for You</h1>
+  <div class="hero-meta">
+    <span>
+      <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      Mon–Sat 9AM–7PM
+    </span>
+    <span>
+      <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      Midrand
+    </span>
+    <span>
+      <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8 19.79 19.79 0 01.01 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+      WhatsApp welcome
+    </span>
+  </div>
+</section>
+
+<!-- LOCATION BAR -->
+
+<a href="https://maps.app.goo.gl/W5t31hGnvibC8vpb8?g_st=ic" target="_blank" rel="noopener" id="location-bar">
+  <div class="loc-inner">
+    <div class="loc-left">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      <div class="loc-text">
+        <span class="loc-name">Tangelo Place, Midrand</span>
+        <span class="loc-hint">Tap to open in Google Maps</span>
+      </div>
+    </div>
+    <span class="loc-arrow">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+    </span>
+  </div>
+</a>
+
+<!-- CATEGORY PILLS -->
+
+<div id="cats-wrap">
+  <div id="cats" class="hide-scroll"></div>
+</div>
+
+<!-- SERVICES -->
+
+<main id="main"></main>
+<p class="footer">Prices include VAT. Deposits may be required for premium services.</p>
+
+<!-- CART BAR -->
+
+<div id="cart-bar">
+  <div class="cart-inner">
+    <div class="cart-left">
+      <span class="cart-total" id="cart-price">R0</span>
+      <span class="cart-lbl" id="cart-lbl">0 services</span>
+    </div>
+    <button class="continue" onclick="openModal()">Review &amp; Book &rarr;</button>
+  </div>
+</div>
+
+<!-- BOOKING MODAL -->
+
+<div id="overlay" onclick="overlayClick(event)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <h2 class="modal-title">Your Booking</h2>
+    <p class="modal-sub">Review your services and confirm your appointment.</p>
+
+    <div id="modal-items"></div>
+
+    <div class="modal-total-row">
+      <span class="modal-total-label">Total</span>
+      <span class="modal-total-val" id="modal-total">R0</span>
+    </div>
+
+    <div class="field">
+      <span class="flabel">Your Name</span>
+      <input type="text" class="finput" id="inp-name" placeholder="e.g. Zanele Mokoena" />
+    </div>
+    <div class="field">
+      <span class="flabel">Phone / WhatsApp</span>
+      <input type="tel" class="finput" id="inp-phone" placeholder="e.g. 082 000 0000" />
+    </div>
+    <div class="field">
+      <span class="flabel">Preferred Date &amp; Time</span>
+      <div class="dt-row">
+        <input type="date" class="finput" id="inp-date" />
+        <select class="fselect" id="inp-time">
+          <option value="">Select time</option>
+          <option>09:00 AM</option><option>09:30 AM</option>
+          <option>10:00 AM</option><option>10:30 AM</option>
+          <option>11:00 AM</option><option>11:30 AM</option>
+          <option>12:00 PM</option><option>12:30 PM</option>
+          <option>01:00 PM</option><option>01:30 PM</option>
+          <option>02:00 PM</option><option>02:30 PM</option>
+          <option>03:00 PM</option><option>03:30 PM</option>
+          <option>04:00 PM</option><option>04:30 PM</option>
+          <option>05:00 PM</option><option>05:30 PM</option>
+          <option>06:00 PM</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <span class="flabel">Special Requests (optional)</span>
+      <textarea class="ftextarea" id="inp-notes" placeholder="Shape preference, design inspo, allergies…"></textarea>
+    </div>
+
+    <button class="confirm-btn" onclick="confirmBooking()">Confirm via WhatsApp &rarr;</button>
+    <button class="cancel-btn" onclick="closeModal()">Back to Menu</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+
+<div id="toast"></div>
+
+<script>
+/* ─── DATA ─── */
+// IMPORTANT: Replace with your actual WhatsApp number (country code + number, no + or spaces)
+const WA = '27636238997';
+
+const CATS = [
+  {
+    id:'acrylics', name:'Acrylic Nails', icon:'💅',
+    services:[
+      {id:'a1', name:'Short Acrylic French Tips',           desc:'French tip extensions on short length. Includes shape, buff & cuticle care.',                price:300, dur:'1h 15min'},
+      {id:'a2', name:'Medium Acrylic French Tips',          desc:'French tip extensions on medium length. Includes shape, buff & cuticle care.',               price:350, dur:'1h 30min'},
+      {id:'a3', name:'Medium Long Acrylic French Tips',     desc:'French tip extensions on medium long length. Includes shape, buff & cuticle care.',          price:380, dur:'1h 30min'},
+      {id:'a4', name:'Long Acrylic French Tips',            desc:'French tip extensions on long length. Includes shape, buff & cuticle care.',                 price:420, dur:'1h 45min'},
+    ]
+  },
+  {
+    id:'plain', name:'Plain Nails', icon:'✋',
+    services:[
+      {id:'pl1', name:'Plain Short Nails',     desc:'Short acrylic extensions with solid colour or natural finish. Clean, classic look.',           price:300, dur:'1h 15min'},
+      {id:'pl2', name:'Plain Medium Nails',    desc:'Medium acrylic extensions with solid colour or natural finish.',                                price:350, dur:'1h 30min'},
+      {id:'pl3', name:'Plain Long Nails',      desc:'Long acrylic extensions with solid colour or natural finish.',                                  price:380, dur:'1h 45min'},
+    ]
+  },
+  {
+    id:'refills', name:'Refills', icon:'🌸',
+    services:[
+      {id:'r1', name:'Refill on My Work',          desc:'Fill regrowth on a set originally done by M&T Nails. Ideal every 2–3 weeks.',               price:300, dur:'1h'},
+      {id:'r2', name:'Refill on Foreign Work',      desc:'Fill regrowth on a set done at another salon. Includes assessment and prep.',                price:350, dur:'1h 15min'},
+      {id:'r3', name:'Buff & Shine',                desc:'Quick buff and shine refresh. Plain finish.',                                                 price:150, dur:'30min'},
+      {id:'r4', name:'Buff & Shine with Design',    desc:'Buff and shine refresh with a design or colour upgrade.',                                     price:200, dur:'45min'},
+    ]
+  },
+  {
+    id:'gel-x', name:'Gel X / Builder Gel', icon:'✨',
+    services:[
+      {id:'g1', name:'Short French Tips (Gel X)',           desc:'Soft gel extensions with French tip design on short length. Lightweight & flexible.',         price:250, dur:'1h'},
+      {id:'g2', name:'Medium French Tips (Gel X)',          desc:'Soft gel extensions with French tip design on medium length.',                                 price:300, dur:'1h 15min'},
+      {id:'g3', name:'Medium Long French Tips (Gel X)',     desc:'Soft gel extensions with French tip design on medium long length.',                            price:330, dur:'1h 15min'},
+      {id:'g4', name:'Long French Tips (Gel X)',            desc:'Soft gel extensions with French tip design on long length.',                                   price:380, dur:'1h 30min'},
+      {id:'g5', name:'Plain Short Nails (Gel X)',           desc:'Short soft gel extensions with solid colour or natural finish.',                                price:250, dur:'1h'},
+      {id:'g6', name:'Plain Medium Nails (Gel X)',          desc:'Medium soft gel extensions with solid colour or natural finish.',                               price:300, dur:'1h 15min'},
+      {id:'g7', name:'Plain Long Nails (Gel X)',            desc:'Long soft gel extensions with solid colour or natural finish.',                                 price:350, dur:'1h 30min'},
+    ]
+  },
+  {
+    id:'pedicures', name:'Pedicures', icon:'🦶',
+    services:[
+      {id:'e1', name:'Plain Gel Pedicure',       desc:'Classic pedicure care with a plain gel polish application. Clean, polished finish.',              price:180, dur:'1h'},
+      {id:'e2', name:'French Pedicure',          desc:'Full pedicure with classic French tip gel design. Timeless and elegant.',                         price:220, dur:'1h 15min'},
+      {id:'e3', name:'Gel Pedicure Soak Off',    desc:'Safe soak-off removal of gel pedicure with nail recovery care.',                                  price:80,  dur:'30min'},
+    ]
+  },
+  {
+    id:'nail-art', name:'Nail Art', icon:'🎨',
+    services:[
+      {id:'n1', name:'Chrome / Mirror Effect',    desc:'Stunning mirror chrome finish over gel. Gold, silver, rose gold & more. Per nail.',                price:15,  dur:'5min/nail',  addon:true},
+      {id:'n2', name:'Gems, Crystals, Charms',    desc:'Crystals, gems or charms applied and sealed under gel for lasting sparkle. Per nail.',             price:10,  dur:'5min/nail',  addon:true},
+      {id:'n3', name:'Swirls',                     desc:'Trendy swirl designs hand-painted on gel. Per nail.',                                              price:10,  dur:'5min/nail',  addon:true},
+      {id:'n4', name:'Airbrush',                   desc:'Precision airbrush design for smooth, flawless gradients and patterns. Per nail.',                 price:15,  dur:'5min/nail',  addon:true},
+      {id:'n5', name:'3D Flowers',                 desc:'Sculpted 3D flower accents for a textured, statement look. Per nail.',                             price:15,  dur:'10min/nail', addon:true},
+      {id:'n6', name:'Blooming Gel',               desc:'Beautiful blooming gel effect creating soft, watercolour-like designs. Per nail.',                  price:10,  dur:'5min/nail',  addon:true},
+    ]
+  },
+];
+
+/* ─── STATE ─── */
+const cart = {}; // id -> { svc, qty }
+
+/* ─── INIT ─── */
+(function init(){
+  buildPills();
+  buildSections();
+  scrollSpy();
+})();
+
+/* ─── PILLS ─── */
+function buildPills(){
+  const wrap = document.getElementById('cats');
+  CATS.forEach((c,i) => {
+    const b = document.createElement('button');
+    b.className = 'cat-pill hide-scroll' + (i===0?' on':'');
+    b.dataset.id = c.id;
+    b.textContent = c.name;
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.cat-pill').forEach(x=>x.classList.remove('on'));
+      b.classList.add('on');
+      const sec = document.getElementById('sec-'+c.id);
+      if(sec){
+        const top = sec.getBoundingClientRect().top + scrollY - 66 - 50 - 12;
+        window.scrollTo({top, behavior:'smooth'});
+      }
+    });
+    wrap.appendChild(b);
+  });
+}
+
+/* ─── SECTIONS ─── */
+function buildSections(){
+  const main = document.getElementById('main');
+  CATS.forEach((cat, ci) => {
+    const sec = document.createElement('section');
+    sec.className = 'svc-sec';
+    sec.id = 'sec-'+cat.id;
+    sec.innerHTML = `<div class="sec-head"><h2 class="sec-title">${cat.icon} ${cat.name}</h2><span class="sec-count">${cat.services.length} services</span></div>`;
+    cat.services.forEach(s => sec.appendChild(makeCard(s)));
+    main.appendChild(sec);
+    if(ci < CATS.length-1){
+      const d = document.createElement('div'); d.className='divider'; main.appendChild(d);
+    }
+  });
+}
+
+function makeCard(s){
+  const div = document.createElement('div');
+  div.className='svc-card';
+  div.id='card-'+s.id;
+  div.innerHTML=`
+    <div class="card-body">
+      <p class="card-name">${s.name}${s.addon?'<span class="addon-badge">ADD-ON</span>':''}</p>
+      <p class="card-desc">${s.desc}</p>
+      <div class="card-meta">
+        <span class="card-price">R${s.price}</span>
+        <span class="card-dot">•</span>
+        <span class="card-dur">
+          <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          ${s.dur}
+        </span>
+      </div>
+    </div>
+    <div class="card-actions" id="act-${s.id}">${renderActions(s.id)}</div>
+  `;
+  return div;
+}
+
+function renderActions(id){
+  const q = cart[id]?.qty || 0;
+  if(q===0) return `<button class="add-btn off" onclick="add('${id}')" aria-label="Add">+</button>`;
+  return `<div class="qty"><button class="qty-btn" onclick="chg('${id}',-1)">−</button><span class="qty-n">${q}</span><button class="qty-btn" onclick="chg('${id}',+1)">+</button></div>`;
+}
+
+function refreshCard(id){
+  const el = document.getElementById('act-'+id);
+  const card = document.getElementById('card-'+id);
+  if(el) el.innerHTML = renderActions(id);
+  if(card) card.classList.toggle('in-cart', !!cart[id]);
+}
+
+/* ─── CART ACTIONS ─── */
+function findSvc(id){ for(const c of CATS) for(const s of c.services) if(s.id===id) return s; }
+
+function add(id){
+  const s = findSvc(id); if(!s) return;
+  cart[id] = cart[id] ? {svc:s, qty:cart[id].qty+1} : {svc:s, qty:1};
+  refreshCard(id); updateBar(); toast(`${s.name} added ✓`);
+}
+
+function chg(id, d){
+  if(!cart[id]) return;
+  cart[id].qty += d;
+  if(cart[id].qty <= 0) delete cart[id];
+  refreshCard(id); updateBar();
+}
+
+function totals(){
+  let total=0, count=0;
+  Object.values(cart).forEach(({svc,qty})=>{total+=svc.price*qty; count+=qty;});
+  return {total, count};
+}
+
+function updateBar(){
+  const {total, count} = totals();
+  document.getElementById('cart-price').textContent = `R${total.toLocaleString('en-ZA')}`;
+  document.getElementById('cart-lbl').textContent = `${count} service${count!==1?'s':''} selected`;
+  document.getElementById('cart-bar').classList.toggle('on', count>0);
+}
+
+/* ─── MODAL ─── */
+function openModal(){
+  const {total} = totals();
+  const list = document.getElementById('modal-items');
+  list.innerHTML = Object.values(cart).map(({svc,qty})=>`
+    <div class="modal-row">
+      <span class="modal-name">${svc.name}</span>
+      <span class="modal-qty">×${qty}</span>
+      <span class="modal-price">R${(svc.price*qty).toLocaleString('en-ZA')}</span>
+    </div>`).join('');
+  document.getElementById('modal-total').textContent = `R${total.toLocaleString('en-ZA')}`;
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('inp-date').min = today;
+  document.getElementById('overlay').classList.add('on');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(){ document.getElementById('overlay').classList.remove('on'); document.body.style.overflow=''; }
+function overlayClick(e){ if(e.target===document.getElementById('overlay')) closeModal(); }
+
+/* ─── WHATSAPP CONFIRM ─── */
+function confirmBooking(){
+  const name  = document.getElementById('inp-name').value.trim();
+  const phone = document.getElementById('inp-phone').value.trim();
+  const date  = document.getElementById('inp-date').value;
+  const time  = document.getElementById('inp-time').value;
+  const notes = document.getElementById('inp-notes').value.trim();
+  if(!name||!phone){ toast('Please enter your name and phone number'); return; }
+  const {total} = totals();
+  const list = Object.values(cart).map(({svc,qty})=>`  • ${svc.name} ×${qty} — R${(svc.price*qty).toLocaleString('en-ZA')}`).join('\n');
+  const dateStr = date ? new Date(date+'T00:00:00').toLocaleDateString('en-ZA',{weekday:'long',day:'numeric',month:'long',year:'numeric'}) : 'TBD';
+  const msg = `Hello M&T Nails! 💅\n\nI'd like to book the following:\n\n${list}\n\n💰 *Total: R${total.toLocaleString('en-ZA')}*\n📅 *Date:* ${dateStr}\n🕐 *Time:* ${time||'TBD'}\n👤 *Name:* ${name}\n📱 *Phone:* ${phone}${notes?`\n📝 *Notes:* ${notes}`:''}\n\n_Booked via M&T Nails online booking_`;
+  window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`, '_blank');
+  closeModal();
+  toast('Opening WhatsApp… see you soon! 💅');
+}
+
+/* ─── TOAST ─── */
+let toastT;
+function toast(msg){
+  const el = document.getElementById('toast');
+  el.textContent=msg; el.classList.add('on');
+  clearTimeout(toastT); toastT=setTimeout(()=>el.classList.remove('on'), 2600);
+}
+
+/* ─── SCROLL SPY ─── */
+function scrollSpy(){
+  const obs = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        const id = e.target.id.replace('sec-','');
+        document.querySelectorAll('.cat-pill').forEach(b=>{
+          b.classList.toggle('on', b.dataset.id===id);
+          if(b.dataset.id===id) b.scrollIntoView({inline:'center',behavior:'smooth'});
+        });
+      }
+    });
+  },{rootMargin:'-120px 0px -60% 0px',threshold:0});
+  document.querySelectorAll('.svc-sec').forEach(s=>obs.observe(s));
+}
+</script>
+
+</body>
+</html>
+
