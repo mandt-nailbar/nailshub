@@ -12,12 +12,13 @@
     :root {
       --cream:      #FAF8F5;
       --cream-dark: #EDE9E1;
+      --beige-grad: linear-gradient(135deg, #FDFBF7 0%, #F3EAE0 100%);
       --white:      #FFFFFF;
       --black:      #111111;
       --charcoal:   #2E2E2E;
       --muted:      #888888;
       --champagne:  #C9A96E;
-      --blush:      #E8C4B0;
+      --champagne-dk: #A8864E;
       --gold-grad:  linear-gradient(135deg,#BF975A 0%,#E2C68A 50%,#C4955A 100%);
       --shadow-sm:  0 2px 10px rgba(0,0,0,0.055);
       --shadow-md:  0 6px 22px rgba(0,0,0,0.09);
@@ -60,21 +61,70 @@
 
     /* ── HERO ── */
     #hero{
-      background:var(--black);
-      padding:28px 20px 24px;
+      background:var(--beige-grad);
+      padding:60px 20px;
       text-align:center;
       position:relative;overflow:hidden;
+      border-bottom:1px solid var(--cream-dark);
     }
-    #hero::before{
-      content:'';position:absolute;inset:0;
-      background:radial-gradient(ellipse at 70% 50%,rgba(201,169,110,.15) 0%,transparent 65%);
-      pointer-events:none;
+    .hero-h{
+      font-family:'Cormorant Garamond',serif;
+      font-size:38px;
+      font-weight:400;
+      color:var(--black);
+      line-height:1.15;
+      letter-spacing:.01em;
+      position:relative;
+      z-index:2;
     }
-    .hero-eye{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--champagne);margin-bottom:8px}
-    .hero-h{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:300;color:#fff;line-height:1.2;margin-bottom:10px;letter-spacing:.01em}
-    .hero-h em{font-style:italic;color:var(--champagne)}
-    .hero-meta{display:flex;align-items:center;justify-content:center;gap:16px;font-size:11.5px;color:rgba(255,255,255,.4)}
-    .hero-meta span{display:flex;align-items:center;gap:5px}
+    .hero-h em{
+      font-style:italic;
+      color:var(--champagne-dk);
+    }
+    
+    /* Hero Liveliness / Real Nail Photos */
+    .hero-text-wrap {
+      position:relative;
+      z-index:2;
+      background:rgba(253, 251, 247, 0.65);
+      backdrop-filter:blur(10px);
+      -webkit-backdrop-filter:blur(10px);
+      padding:24px 32px;
+      border-radius:24px;
+      border:1px solid rgba(255,255,255,0.8);
+      box-shadow:0 8px 32px rgba(201,169,110,0.15);
+      display:inline-block;
+    }
+
+    .deco-img {
+      position:absolute;
+      border-radius:100px; /* Pill shape mimicking an almond/oval nail */
+      border:3.5px solid var(--white);
+      box-shadow:0 8px 24px rgba(0,0,0,0.12);
+      overflow:hidden;
+      z-index:1;
+      animation:float 6s ease-in-out infinite;
+      background:var(--cream-dark);
+    }
+    .deco-img img {
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      object-position:center;
+      display:block;
+    }
+
+    /* Scattered positioning around the banner */
+    .d1 { top:4%; left:-2%; width:85px; height:130px; animation-delay:0s; --r:-12deg; }
+    .d2 { bottom:6%; right:-4%; width:95px; height:145px; animation-delay:1.5s; --r:14deg; }
+    .d3 { top:-4%; right:14%; width:70px; height:110px; animation-delay:3s; --r:22deg; }
+    .d4 { bottom:2%; left:12%; width:75px; height:115px; animation-delay:4.5s; --r:-18deg; }
+    .d5 { top:42%; left:-6%; width:60px; height:90px; animation-delay:2s; --r:-5deg; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(var(--r)); }
+      50% { transform: translateY(-12px) rotate(calc(var(--r) + 4deg)); }
+    }
 
     /* ── LOCATION BAR ── */
     #location-bar{
@@ -224,11 +274,18 @@
       width:100%;max-width:600px;
       background:var(--white);border-radius:20px 20px 0 0;
       padding:24px 20px 36px;
-      animation:slideup .32s cubic-bezier(.34,1.2,.64,1) forwards;
       max-height:92vh;overflow-y:auto;
+      
+      /* Animation via transition for swipeability */
+      transform: translateY(100%);
+      transition: transform .35s cubic-bezier(.34,1.2,.64,1);
     }
-    @keyframes slideup{from{transform:translateY(100%)}to{transform:translateY(0)}}
-    .modal-handle{width:40px;height:4px;background:var(--cream-dark);border-radius:100px;margin:0 auto 20px}
+    #overlay.on .modal {
+      transform: translateY(0);
+    }
+    
+    .modal-handle{width:40px;height:4px;background:var(--cream-dark);border-radius:100px;margin:0 auto 20px; cursor:grab}
+    .modal-handle:active{cursor:grabbing}
     .modal-title{font-family:'Cormorant Garamond',serif;font-size:23px;font-weight:500;color:var(--black);margin-bottom:3px}
     .modal-sub{font-size:12.5px;color:var(--muted);font-weight:300;margin-bottom:18px}
     .modal-row{
@@ -295,8 +352,8 @@
     .footer{text-align:center;padding:10px 20px 32px;font-size:11.5px;color:rgba(0,0,0,.28);font-weight:300;max-width:600px;margin:0 auto}
 
     @media(min-width:600px){
-      .hero-h{font-size:34px}
-      #hero{padding:34px 20px 28px}
+      .hero-h{font-size:44px}
+      #hero{padding:70px 20px}
     }
   </style>
 
@@ -320,22 +377,28 @@
 <!-- HERO -->
 
 <section id="hero">
-  <p class="hero-eye">Book Online</p>
-  <h1 class="hero-h">Luxury Nails, <em>Crafted</em> for You</h1>
-  <div class="hero-meta">
-    <span>
-      <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-      Mon–Sat 9AM–7PM
-    </span>
-    <span>
-      <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-      Midrand
-    </span>
-    <span>
-      <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8 19.79 19.79 0 01.01 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-      WhatsApp welcome
-    </span>
+  
+  <!-- Realistic Nail Art Photos (Save your uploaded images in the same folder as this file and name them nail-1.png, nail-2.png, etc.) -->
+  <div class="deco-img d1">
+    <img src="nail-1.png" onerror="this.src='https://images.unsplash.com/photo-1604654894610-df63bc536371?q=80&w=300&auto=format&fit=crop'" alt="Yellow French tips with 3D flower" />
   </div>
+  <div class="deco-img d2">
+    <img src="nail-2.png" onerror="this.src='https://images.unsplash.com/photo-1595054593539-75ec44331db5?q=80&w=300&auto=format&fit=crop'" alt="Leopard print and floral nails" />
+  </div>
+  <div class="deco-img d3">
+    <img src="nail-3.png" onerror="this.src='https://images.unsplash.com/photo-1519014816548-bf5fe059e98b?q=80&w=300&auto=format&fit=crop'" alt="Yellow French tip swirl nails" />
+  </div>
+  <div class="deco-img d4">
+    <img src="nail-4.png" onerror="this.src='https://images.unsplash.com/photo-1632832822760-b61cbac335b2?q=80&w=300&auto=format&fit=crop'" alt="Pink almond nails with 3D flower" />
+  </div>
+  <div class="deco-img d5">
+    <img src="nail-5.png" onerror="this.src='https://images.unsplash.com/photo-1629815413476-0f7e0766289b?q=80&w=300&auto=format&fit=crop'" alt="White French tips with flower accents" />
+  </div>
+
+  <div class="hero-text-wrap">
+    <h1 class="hero-h">Luxury Nails,<br><em>Crafted</em> for You</h1>
+  </div>
+  
 </section>
 
 <!-- LOCATION BAR -->
@@ -450,6 +513,18 @@ const CATS = [
     ]
   },
   {
+    id:'gel-x', name:'Gel X / Builder Gel', icon:'✨',
+    services:[
+      {id:'g1', name:'Short French Tips (Gel X)',           desc:'Soft gel extensions with French tip design on short length. Lightweight & flexible.',         price:250, dur:'1h'},
+      {id:'g2', name:'Medium French Tips (Gel X)',          desc:'Soft gel extensions with French tip design on medium length.',                                 price:300, dur:'1h 15min'},
+      {id:'g3', name:'Medium Long French Tips (Gel X)',     desc:'Soft gel extensions with French tip design on medium long length.',                            price:330, dur:'1h 15min'},
+      {id:'g4', name:'Long French Tips (Gel X)',            desc:'Soft gel extensions with French tip design on long length.',                                   price:380, dur:'1h 30min'},
+      {id:'g5', name:'Plain Short Nails (Gel X)',           desc:'Short soft gel extensions with solid colour or natural finish.',                                price:250, dur:'1h'},
+      {id:'g6', name:'Plain Medium Nails (Gel X)',          desc:'Medium soft gel extensions with solid colour or natural finish.',                               price:300, dur:'1h 15min'},
+      {id:'g7', name:'Plain Long Nails (Gel X)',            desc:'Long soft gel extensions with solid colour or natural finish.',                                 price:350, dur:'1h 30min'},
+    ]
+  },
+  {
     id:'plain', name:'Plain Nails', icon:'✋',
     services:[
       {id:'pl1', name:'Plain Short Nails',     desc:'Short acrylic extensions with solid colour or natural finish. Clean, classic look.',           price:300, dur:'1h 15min'},
@@ -464,18 +539,6 @@ const CATS = [
       {id:'r2', name:'Refill on Foreign Work',      desc:'Fill regrowth on a set done at another salon. Includes assessment and prep.',                price:350, dur:'1h 15min'},
       {id:'r3', name:'Buff & Shine',                desc:'Quick buff and shine refresh. Plain finish.',                                                 price:150, dur:'30min'},
       {id:'r4', name:'Buff & Shine with Design',    desc:'Buff and shine refresh with a design or colour upgrade.',                                     price:200, dur:'45min'},
-    ]
-  },
-  {
-    id:'gel-x', name:'Gel X / Builder Gel', icon:'✨',
-    services:[
-      {id:'g1', name:'Short French Tips (Gel X)',           desc:'Soft gel extensions with French tip design on short length. Lightweight & flexible.',         price:250, dur:'1h'},
-      {id:'g2', name:'Medium French Tips (Gel X)',          desc:'Soft gel extensions with French tip design on medium length.',                                 price:300, dur:'1h 15min'},
-      {id:'g3', name:'Medium Long French Tips (Gel X)',     desc:'Soft gel extensions with French tip design on medium long length.',                            price:330, dur:'1h 15min'},
-      {id:'g4', name:'Long French Tips (Gel X)',            desc:'Soft gel extensions with French tip design on long length.',                                   price:380, dur:'1h 30min'},
-      {id:'g5', name:'Plain Short Nails (Gel X)',           desc:'Short soft gel extensions with solid colour or natural finish.',                                price:250, dur:'1h'},
-      {id:'g6', name:'Plain Medium Nails (Gel X)',          desc:'Medium soft gel extensions with solid colour or natural finish.',                               price:300, dur:'1h 15min'},
-      {id:'g7', name:'Plain Long Nails (Gel X)',            desc:'Long soft gel extensions with solid colour or natural finish.',                                 price:350, dur:'1h 30min'},
     ]
   },
   {
@@ -610,7 +673,45 @@ function updateBar(){
   document.getElementById('cart-bar').classList.toggle('on', count>0);
 }
 
-/* ─── MODAL ─── */
+/* ─── MODAL (DRAG TO CLOSE LOGIC) ─── */
+const modalEl = document.querySelector('.modal');
+let dragStartY = 0;
+let dragCurrentY = 0;
+let isDragging = false;
+
+modalEl.addEventListener('touchstart', (e) => {
+  // Only start drag if modal is scrolled entirely to the top
+  if (modalEl.scrollTop <= 0) {
+    dragStartY = e.touches[0].clientY;
+    isDragging = true;
+    modalEl.style.transition = 'none'; // disable CSS transition for smooth drag
+  }
+}, {passive: true});
+
+modalEl.addEventListener('touchmove', (e) => {
+  if (!isDragging) return;
+  dragCurrentY = e.touches[0].clientY;
+  const diff = dragCurrentY - dragStartY;
+  
+  if (diff > 0) { // dragging downwards
+    modalEl.style.transform = `translateY(${diff}px)`;
+    if(e.cancelable) e.preventDefault(); // prevent background pull-to-refresh
+  }
+}, {passive: false});
+
+modalEl.addEventListener('touchend', () => {
+  if (!isDragging) return;
+  isDragging = false;
+  modalEl.style.transition = 'transform .35s cubic-bezier(.34,1.2,.64,1)'; // restore animation
+  
+  const diff = dragCurrentY - dragStartY;
+  if (diff > 120) { // Threshold met, close it
+    closeModal();
+  } else {
+    modalEl.style.transform = ''; // snap back to open position
+  }
+});
+
 function openModal(){
   const {total} = totals();
   const list = document.getElementById('modal-items');
@@ -623,10 +724,20 @@ function openModal(){
   document.getElementById('modal-total').textContent = `R${total.toLocaleString('en-ZA')}`;
   const today = new Date().toISOString().split('T')[0];
   document.getElementById('inp-date').min = today;
+  
+  // Reset inline transforms from previous drags
+  modalEl.style.transform = ''; 
+  
   document.getElementById('overlay').classList.add('on');
   document.body.style.overflow = 'hidden';
 }
-function closeModal(){ document.getElementById('overlay').classList.remove('on'); document.body.style.overflow=''; }
+
+function closeModal(){ 
+  document.getElementById('overlay').classList.remove('on'); 
+  document.body.style.overflow=''; 
+  // Wait for the CSS transition to complete before resetting transform
+  setTimeout(() => { modalEl.style.transform = ''; }, 350);
+}
 function overlayClick(e){ if(e.target===document.getElementById('overlay')) closeModal(); }
 
 /* ─── WHATSAPP CONFIRM ─── */
@@ -673,4 +784,3 @@ function scrollSpy(){
 
 </body>
 </html>
-
