@@ -506,7 +506,7 @@ const CATS = [
   {
     id:'acrylics', name:'Acrylic Nails', icon:'💅',
     services:[
-      {id:'a1', name:'Short Acrylic French Tips',           desc:'French tip extensions on short length. Includes shape, buff & cuticle care.',                price:350, dur:'1h 15min'},
+      {id:'a1', name:'Short Acrylic French Tips',            desc:'French tip extensions on short length. Includes shape, buff & cuticle care.',                 price:350, dur:'1h 15min'},
       {id:'a2', name:'Medium Acrylic French Tips',          desc:'French tip extensions on medium length. Includes shape, buff & cuticle care.',               price:380, dur:'1h 30min'},
       {id:'a4', name:'Long Acrylic French Tips',            desc:'French tip extensions on long length. Includes shape, buff & cuticle care.',                 price:430, dur:'1h 45min'},
     ]
@@ -514,7 +514,7 @@ const CATS = [
   {
     id:'plain', name:'Plain Nails', icon:'✋',
     services:[
-      {id:'pl1', name:'Plain Short Nails',     desc:'Short acrylic extensions with solid colour or natural finish. Clean, classic look.',           price:300, dur:'1h 15min'},
+      {id:'pl1', name:'Plain Short Nails',     desc:'Short acrylic extensions with solid colour or natural finish. Clean, classic look.',            price:300, dur:'1h 15min'},
       {id:'pl2', name:'Plain Medium Nails',    desc:'Medium acrylic extensions with solid colour or natural finish.',                                price:350, dur:'1h 30min'},
       {id:'pl3', name:'Plain Long Nails',      desc:'Long acrylic extensions with solid colour or natural finish.',                                  price:380, dur:'1h 45min'},
     ]
@@ -524,8 +524,8 @@ const CATS = [
     services:[
       {id:'r1', name:'Refill on My Work',          desc:'Fill regrowth on a set originally done by M&T Nails. Ideal every 2–3 weeks.',               price:300, dur:'1h'},
       {id:'r2', name:'Refill on Foreign Work',      desc:'Fill regrowth on a set done at another salon. Includes assessment and prep.',                price:350, dur:'1h 15min'},
-      {id:'r3', name:'Buff & Shine',                desc:'Quick buff and shine refresh. Plain finish.',                                                 price:150, dur:'30min'},
-      {id:'r4', name:'Buff & Shine with Design',    desc:'Buff and shine refresh with a design or colour upgrade.',                                     price:200, dur:'45min'},
+      {id:'r3', name:'Buff & Shine',                desc:'Quick buff and shine refresh. Plain finish.',                                                price:150, dur:'30min'},
+      {id:'r4', name:'Buff & Shine with Design',    desc:'Buff and shine refresh with a design or colour upgrade.',                                      price:200, dur:'45min'},
     ]
   },
   {
@@ -541,16 +541,18 @@ const CATS = [
     services:[
       {id:'n1', name:'Chrome / Mirror Effect',    desc:'Stunning mirror chrome finish over gel. Gold, silver, rose gold & more. Per nail.',                price:15,  dur:'5min/nail',  addon:true},
       {id:'n2', name:'Gems, Crystals, Charms',    desc:'Crystals, gems or charms applied and sealed under gel for lasting sparkle. Per nail.',             price:10,  dur:'5min/nail',  addon:true},
-      {id:'n3', name:'Swirls',                     desc:'Trendy swirl designs hand-painted on gel. Per nail.',                                              price:10,  dur:'5min/nail',  addon:true},
+      {id:'n3', name:'Swirls',                     desc:'Trendy swirl designs hand-painted on gel. Per nail.',                                             price:10,  dur:'5min/nail',  addon:true},
       {id:'n4', name:'Airbrush',                   desc:'Precision airbrush design for smooth, flawless gradients and patterns. Per nail.',                 price:15,  dur:'5min/nail',  addon:true},
       {id:'n5', name:'3D Flowers',                 desc:'Sculpted 3D flower accents for a textured, statement look. Per nail.',                             price:15,  dur:'10min/nail', addon:true},
-      {id:'n6', name:'Blooming Gel',               desc:'Beautiful blooming gel effect creating soft, watercolour-like designs. Per nail.',                  price:10,  dur:'5min/nail',  addon:true},
+      {id:'n6', name:'Blooming Gel',               desc:'Beautiful blooming gel effect creating soft, watercolour-like designs. Per nail.',                 price:10,  dur:'5min/nail',  addon:true},
     ]
   },
 ];
 
 /* ─── STATE ─── */
 const cart = {}; // id -> { svc, qty }
+let isAutoScrolling = false;
+let scrollTimeout;
 
 /* ─── INIT ─── */
 (function init(){
@@ -568,16 +570,25 @@ function buildPills(){
     b.dataset.id = c.id;
     b.textContent = c.name;
     b.addEventListener('click', () => {
+      // 1. Temporarily disable the scroll spy during smooth scroll
+      isAutoScrolling = true;
+      clearTimeout(scrollTimeout);
+
       document.querySelectorAll('.cat-pill').forEach(x=>x.classList.remove('on'));
       b.classList.add('on');
       const sec = document.getElementById('sec-'+c.id);
+      
       if(sec){
-        const stickyOffset = document.getElementById('hdr').offsetHeight + document.getElementById('cats-wrap').offsetHeight;
-        const top = sec.getBoundingClientRect().top + scrollY - stickyOffset - 8;
-        spySuppressed = true;
+        // 2. Dynamically calculate the heights of the sticky elements
+        const hdrH = document.getElementById('hdr').offsetHeight || 66;
+        const catsH = document.getElementById('cats-wrap').offsetHeight || 0;
+        
+        // Use the exact offsets so it lands perfectly every time
+        const top = sec.getBoundingClientRect().top + window.scrollY - hdrH - catsH - 12;
         window.scrollTo({top, behavior:'smooth'});
-        clearTimeout(spyTimer);
-        spyTimer = setTimeout(()=>{ spySuppressed = false; updateSpy(); }, 600);
+
+        // 3. Re-enable the scroll spy after the smooth scroll finishes (~800ms)
+        scrollTimeout = setTimeout(() => { isAutoScrolling = false; }, 800);
       }
     });
     wrap.appendChild(b);
@@ -757,29 +768,30 @@ function toast(msg){
 }
 
 /* ─── SCROLL SPY ─── */
-let spySuppressed = false;
-let spyTimer;
-
-function updateSpy(){
-  if(spySuppressed) return;
-  const stickyOffset = document.getElementById('hdr').offsetHeight + document.getElementById('cats-wrap').offsetHeight + 16;
-  const sections = Array.from(document.querySelectorAll('.svc-sec'));
-  let current = sections[0];
-  for(const sec of sections){
-    if(sec.getBoundingClientRect().top <= stickyOffset) current = sec;
-  }
-  if(!current) return;
-  const id = current.id.replace('sec-','');
-  document.querySelectorAll('.cat-pill').forEach(b=>{
-    const isOn = b.dataset.id === id;
-    b.classList.toggle('on', isOn);
-    if(isOn) b.scrollIntoView({inline:'center', behavior:'smooth'});
-  });
-}
-
 function scrollSpy(){
-  window.addEventListener('scroll', updateSpy, {passive:true});
-  updateSpy();
+  const obs = new IntersectionObserver(entries=>{
+    // Ignore spy triggers if the user just clicked a pill
+    if(isAutoScrolling) return; 
+
+    // Find the latest active section to prevent batching conflicts
+    let activeId = null;
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        activeId = e.target.id.replace('sec-','');
+      }
+    });
+
+    if(activeId) {
+      document.querySelectorAll('.cat-pill').forEach(b=>{
+        b.classList.toggle('on', b.dataset.id===activeId);
+        if(b.dataset.id===activeId) {
+          b.scrollIntoView({inline:'center',behavior:'smooth'});
+        }
+      });
+    }
+  },{rootMargin:'-140px 0px -60% 0px', threshold:0}); // Adjusted margin slightly to accommodate dynamic headers
+  
+  document.querySelectorAll('.svc-sec').forEach(s=>obs.observe(s));
 }
 </script>
 
