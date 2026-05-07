@@ -572,8 +572,12 @@ function buildPills(){
       b.classList.add('on');
       const sec = document.getElementById('sec-'+c.id);
       if(sec){
-        const top = sec.getBoundingClientRect().top + scrollY - 66 - 50 - 12;
+        const stickyOffset = document.getElementById('hdr').offsetHeight + document.getElementById('cats-wrap').offsetHeight;
+        const top = sec.getBoundingClientRect().top + scrollY - stickyOffset - 8;
+        spySuppressed = true;
         window.scrollTo({top, behavior:'smooth'});
+        clearTimeout(spyTimer);
+        spyTimer = setTimeout(()=>{ spySuppressed = false; updateSpy(); }, 600);
       }
     });
     wrap.appendChild(b);
@@ -753,19 +757,29 @@ function toast(msg){
 }
 
 /* ─── SCROLL SPY ─── */
+let spySuppressed = false;
+let spyTimer;
+
+function updateSpy(){
+  if(spySuppressed) return;
+  const stickyOffset = document.getElementById('hdr').offsetHeight + document.getElementById('cats-wrap').offsetHeight + 16;
+  const sections = Array.from(document.querySelectorAll('.svc-sec'));
+  let current = sections[0];
+  for(const sec of sections){
+    if(sec.getBoundingClientRect().top <= stickyOffset) current = sec;
+  }
+  if(!current) return;
+  const id = current.id.replace('sec-','');
+  document.querySelectorAll('.cat-pill').forEach(b=>{
+    const isOn = b.dataset.id === id;
+    b.classList.toggle('on', isOn);
+    if(isOn) b.scrollIntoView({inline:'center', behavior:'smooth'});
+  });
+}
+
 function scrollSpy(){
-  const obs = new IntersectionObserver(entries=>{
-    entries.forEach(e=>{
-      if(e.isIntersecting){
-        const id = e.target.id.replace('sec-','');
-        document.querySelectorAll('.cat-pill').forEach(b=>{
-          b.classList.toggle('on', b.dataset.id===id);
-          if(b.dataset.id===id) b.scrollIntoView({inline:'center',behavior:'smooth'});
-        });
-      }
-    });
-  },{rootMargin:'-120px 0px -60% 0px',threshold:0});
-  document.querySelectorAll('.svc-sec').forEach(s=>obs.observe(s));
+  window.addEventListener('scroll', updateSpy, {passive:true});
+  updateSpy();
 }
 </script>
 
