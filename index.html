@@ -186,6 +186,15 @@
     .sec-head{display:flex;align-items:baseline;gap:10px;margin-bottom:13px;padding:0 4px}
     .sec-title{font-family:'Cormorant Garamond',serif;font-size:21px;font-weight:500;color:var(--black);letter-spacing:.01em}
     .sec-count{font-size:11px;color:var(--muted);font-weight:300}
+    .sec-note{
+      display:flex;gap:8px;align-items:flex-start;
+      background:rgba(201,169,110,.1);
+      border:1px solid rgba(201,169,110,.28);
+      border-radius:var(--radius-sm);
+      padding:10px 13px;margin:0 4px 14px;
+      font-size:12.5px;line-height:1.45;color:var(--champagne-dk);font-weight:400;
+    }
+    .sec-note::before{content:'💡';font-size:13px;line-height:1.45;flex-shrink:0}
 
     /* ── SERVICE CARD ── */
     .svc-card{
@@ -512,6 +521,22 @@ const CATS = [
     ]
   },
   {
+    id:'nail-art', name:'Nail Art', icon:'🎨',
+    note:'NB: Remember to add your nail art! Prices are per nail and added on top of your chosen set.',
+    services:[
+      {id:'n1',  name:'Chrome / Mirror Effect', desc:'Stunning mirror chrome finish over gel. Gold, silver, rose gold & more. Per nail.',     price:15, dur:'5min/nail',  addon:true},
+      {id:'n2',  name:'Crystals & Gems',         desc:'Crystals or gems applied and sealed under gel for lasting sparkle. Per nail.',            price:10, dur:'5min/nail',  addon:true},
+      {id:'n3',  name:'Charms',                  desc:'Decorative charms applied and sealed for a statement finish. Per nail.',                  price:10, dur:'5min/nail',  addon:true},
+      {id:'n4',  name:'Animal Print',            desc:'Hand-painted animal print accents. Per nail.',                                             price:15, dur:'5min/nail',  addon:true},
+      {id:'n5',  name:'Swirls',                  desc:'Trendy swirl designs hand-painted on gel. Per nail.',                                      price:10, dur:'5min/nail',  addon:true},
+      {id:'n6',  name:'Airbrush',                desc:'Precision airbrush design for smooth, flawless gradients and patterns. Per nail.',         price:15, dur:'5min/nail',  addon:true},
+      {id:'n7',  name:'3D Flower',               desc:'Sculpted 3D flower accents for a textured, statement look. Per nail.',                     price:20, dur:'10min/nail', addon:true},
+      {id:'n8',  name:'Blooming Gel',            desc:'Soft, watercolour-like blooming gel effect. Per nail.',                                    price:10, dur:'5min/nail',  addon:true},
+      {id:'n9',  name:'Zebra Print',             desc:'Hand-painted zebra print accents. Per nail.',                                              price:10, dur:'5min/nail',  addon:true},
+      {id:'n10', name:'Blooming Flowers',        desc:'Detailed blooming flower designs hand-painted on gel. Per nail.',                          price:15, dur:'5min/nail',  addon:true},
+    ]
+  },
+  {
     id:'almond', name:'Almond French', icon:'✨',
     services:[
       {id:'al1', name:'Short Almond French',     desc:'Almond shape with classic French tip. Elegant, soft silhouette. Nail art charged separately.',            price:370, dur:'1h 15min'},
@@ -550,21 +575,6 @@ const CATS = [
       {id:'e1', name:'Plain Gel Pedicure',       desc:'Classic pedicure care with a plain gel polish application. Clean, polished finish.',              price:200, dur:'1h'},
       {id:'e2', name:'French Pedicure',          desc:'Full pedicure with classic French tip gel design. Timeless and elegant.',                         price:250, dur:'1h 15min'},
       {id:'e3', name:'Gel Pedicure Soak Off',    desc:'Safe soak-off removal of gel pedicure with nail recovery care.',                                  price:80,  dur:'30min'},
-    ]
-  },
-  {
-    id:'nail-art', name:'Nail Art', icon:'🎨',
-    services:[
-      {id:'n1',  name:'Chrome / Mirror Effect', desc:'Stunning mirror chrome finish over gel. Gold, silver, rose gold & more. Per nail.',     price:15, dur:'5min/nail',  addon:true},
-      {id:'n2',  name:'Crystals & Gems',         desc:'Crystals or gems applied and sealed under gel for lasting sparkle. Per nail.',            price:10, dur:'5min/nail',  addon:true},
-      {id:'n3',  name:'Charms',                  desc:'Decorative charms applied and sealed for a statement finish. Per nail.',                  price:10, dur:'5min/nail',  addon:true},
-      {id:'n4',  name:'Animal Print',            desc:'Hand-painted animal print accents. Per nail.',                                             price:15, dur:'5min/nail',  addon:true},
-      {id:'n5',  name:'Swirls',                  desc:'Trendy swirl designs hand-painted on gel. Per nail.',                                      price:10, dur:'5min/nail',  addon:true},
-      {id:'n6',  name:'Airbrush',                desc:'Precision airbrush design for smooth, flawless gradients and patterns. Per nail.',         price:15, dur:'5min/nail',  addon:true},
-      {id:'n7',  name:'3D Flower',               desc:'Sculpted 3D flower accents for a textured, statement look. Per nail.',                     price:20, dur:'10min/nail', addon:true},
-      {id:'n8',  name:'Blooming Gel',            desc:'Soft, watercolour-like blooming gel effect. Per nail.',                                    price:10, dur:'5min/nail',  addon:true},
-      {id:'n9',  name:'Zebra Print',             desc:'Hand-painted zebra print accents. Per nail.',                                              price:10, dur:'5min/nail',  addon:true},
-      {id:'n10', name:'Blooming Flowers',        desc:'Detailed blooming flower designs hand-painted on gel. Per nail.',                          price:15, dur:'5min/nail',  addon:true},
     ]
   },
 ];
@@ -616,7 +626,7 @@ function buildSections(){
     const sec = document.createElement('section');
     sec.className = 'svc-sec';
     sec.id = 'sec-'+cat.id;
-    sec.innerHTML = `<div class="sec-head"><h2 class="sec-title">${cat.icon} ${cat.name}</h2><span class="sec-count">${cat.services.length} services</span></div>`;
+    sec.innerHTML = `<div class="sec-head"><h2 class="sec-title">${cat.icon} ${cat.name}</h2><span class="sec-count">${cat.services.length} services</span></div>${cat.note?`<div class="sec-note">${cat.note}</div>`:''}`;
     cat.services.forEach(s => sec.appendChild(makeCard(s)));
     main.appendChild(sec);
     if(ci < CATS.length-1){
